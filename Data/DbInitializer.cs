@@ -41,7 +41,8 @@ namespace Pascu_Bianca_Lab2.Data
                 new Customer
                 {
                     Name = "Mihailescu Cornel",
-                    Adress = "Str. Bucuresti, nr. 45, ap. 2",BirthDate=DateTime.Parse("1969 - 07 - 08")}
+                    Adress = "Str. Bucuresti, nr. 45, ap. 2",
+                    BirthDate=DateTime.Parse("1969 - 07 - 08")}
                
                 );
 

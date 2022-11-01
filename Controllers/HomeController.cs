@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Pascu_Bianca_Lab2.Models;
 using System.Diagnostics;
-
 namespace Pascu_Bianca_Lab2.Controllers
 {
     public class HomeController : Controller
