@@ -8,9 +8,9 @@ namespace Pascu_Bianca_Lab2.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
+           /* migrationBuilder.DropColumn(
                 name: "Author",
-                table: "Book");
+                table: "Book");*/
 
             migrationBuilder.AddColumn<int>(
                 name: "AuthorID",
