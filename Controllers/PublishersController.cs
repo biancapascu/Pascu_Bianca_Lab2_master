@@ -21,35 +21,36 @@ namespace Pascu_Bianca_Lab2.Controllers
         }
 
         // GET: Publishers
-        public async Task<IActionResult> Index(int? id, int? bookID)
+        public async Task<IActionResult> Index(int? id, int? bookID, string? customerNAME)
         {
             var viewModel = new PublisherIndexData();
             viewModel.Publishers = await _context.Publishers
-            .Include(i => i.PublishedBooks)
-            .ThenInclude(i => i.Book)
-            .ThenInclude(i => i.Orders)
-            .ThenInclude(i => i.Customer)
-            .Include(i => i.PublishedBooks)
-            .ThenInclude(i => i.Book)
-            .ThenInclude(i => i.Author)
-            .AsNoTracking()
-            .OrderBy(i => i.PublisherName)
-            .ToListAsync();
+                .Include(i => i.PublishedBooks)
+                .ThenInclude(i => i.Book)
+                .ThenInclude(i => i.Orders)
+                .ThenInclude(i => i.Customer)
+                .AsNoTracking()
+                .OrderBy(i => i.PublisherName)
+                .ToListAsync();
             if (id != null)
             {
                 ViewData["PublisherID"] = id.Value;
-                Publisher publisher = viewModel.Publishers.Where(
-                i => i.ID == id.Value).Single();
+                Publisher publisher = viewModel.Publishers.Where(i => i.ID == id.Value).Single();
                 viewModel.Books = publisher.PublishedBooks.Select(s => s.Book);
             }
             if (bookID != null)
             {
-                ViewData["BoookID"] = bookID.Value;
-                viewModel.Orders = viewModel.Books.Where(
-                x => x.ID == bookID).Single().Orders;
+                ViewData["BookID"] = bookID.Value;
+                viewModel.Orders = viewModel.Books.Where(x => x.ID == bookID).Single().Orders;
             }
+            //if (customerNAME != null)
+            //{
+            //    ViewData["CustomerNAME"] = customerNAME;
+            //    viewModel.Customers = viewModel.Customers.Where(y => y.Name == customerNAME);
+            //}
             return View(viewModel);
         }
+
 
         // GET: Publishers/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -99,17 +100,18 @@ namespace Pascu_Bianca_Lab2.Controllers
                 return NotFound();
             }
             var publisher = await _context.Publishers
-            .Include(i => i.PublishedBooks).ThenInclude(i => i.Book)
-            .AsNoTracking()
-            .FirstOrDefaultAsync(m => m.ID == id);
+                .Include(i => i.PublishedBooks)
+                .ThenInclude(i => i.Book)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(m => m.ID == id);
             if (publisher == null)
             {
                 return NotFound();
             }
             PopulatePublishedBookData(publisher);
             return View(publisher);
-
         }
+
         private void PopulatePublishedBookData(Publisher publisher)
         {
             var allBooks = _context.Books;
@@ -139,13 +141,10 @@ namespace Pascu_Bianca_Lab2.Controllers
                 return NotFound();
             }
             var publisherToUpdate = await _context.Publishers
-            .Include(i => i.PublishedBooks)
-            .ThenInclude(i => i.Book)
-            .FirstOrDefaultAsync(m => m.ID == id);
-            if (await TryUpdateModelAsync<Publisher>(
-            publisherToUpdate,
-            "",
-            i => i.PublisherName, i => i.Adress))
+                .Include(i => i.PublishedBooks)
+                .ThenInclude(i => i.Book)
+                .FirstOrDefaultAsync(m => m.ID == id);
+            if (await TryUpdateModelAsync<Publisher>(publisherToUpdate, "", i => i.PublisherName, i => i.Adress))
             {
                 UpdatePublishedBooks(selectedBooks, publisherToUpdate);
                 try
@@ -154,9 +153,7 @@ namespace Pascu_Bianca_Lab2.Controllers
                 }
                 catch (DbUpdateException /* ex */)
                 {
-
-                    ModelState.AddModelError("", "Unable to save changes. " +
-                    "Try again, and if the problem persists, ");
+                    ModelState.AddModelError("", "Unable to save changes. " + "Try again, and if the problem persists, ");
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -164,6 +161,7 @@ namespace Pascu_Bianca_Lab2.Controllers
             PopulatePublishedBookData(publisherToUpdate);
             return View(publisherToUpdate);
         }
+
         private void UpdatePublishedBooks(string[] selectedBooks, Publisher publisherToUpdate)
         {
             if (selectedBooks == null)
@@ -181,8 +179,7 @@ namespace Pascu_Bianca_Lab2.Controllers
                     {
                         publisherToUpdate.PublishedBooks.Add(new PublishedBook
                         {
-                            PublisherID =
-                       publisherToUpdate.ID,
+                            PublisherID = publisherToUpdate.ID,
                             BookID = book.ID
                         });
                     }
@@ -191,7 +188,7 @@ namespace Pascu_Bianca_Lab2.Controllers
                 {
                     if (publishedBooks.Contains(book.ID))
                     {
-                        PublishedBook bookToRemove = publisherToUpdate.PublishedBooks.FirstOrDefault(i=> i.BookID == book.ID);
+                        PublishedBook bookToRemove = publisherToUpdate.PublishedBooks.FirstOrDefault(i => i.BookID == book.ID);
                         _context.Remove(bookToRemove);
                     }
                 }
@@ -230,14 +227,14 @@ namespace Pascu_Bianca_Lab2.Controllers
             {
                 _context.Publishers.Remove(publisher);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool PublisherExists(int id)
         {
-          return _context.Publishers.Any(e => e.ID == id);
+            return _context.Publishers.Any(e => e.ID == id);
         }
     }
 }
