@@ -9,7 +9,7 @@ namespace Pascu_Bianca_Lab2.Models
     {
         public int ID { get; set; }
         public string CityName { get; set; }
-        public ICollection<Customer>? Customers { get; set; }
+      //  public ICollection<Customer>? Customers { get; set; }
 
     }
 }
