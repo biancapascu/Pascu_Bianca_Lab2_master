@@ -9,11 +9,13 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Pascu_Bianca_Lab2.Data;
 using Pascu_Bianca_Lab2.Models;
+using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
 using System.Text;
 
 namespace Pascu_Bianca_Lab2.Controllers
 {
+    [Authorize(Policy = "SalesManager")]
     public class CustomersController : Controller
     {
         private readonly LibraryContext _context;

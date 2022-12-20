@@ -44,6 +44,5 @@ namespace Pascu_Bianca_Lab2.Controllers
         {
             return View();
         }
-
     }
 }
